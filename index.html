@@ -1,1 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jspotslot — 11-Block 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Archivo:wght@400;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============ FONTS (your fonts/ folder takes priority, CDN fallbacks after) ============ */
+@font-face{font-family:'Aujournuit';src:url('fonts/Aujournuit-VariableVF.ttf') format('truetype');font-weight:100 900;font-display:swap}
+@font-face{font-family:'NimbusSanL';src:url('fonts/NimbusSanL-Bol.otf') format('opentype');font-weight:700;font-display:swap}
+@font-face{font-family:'Minecraftia';src:url('fonts/MinecraftRegular-Bmg3.otf') format('opentype');font-display:swap}
 
+/* ============ TOKENS ============ */
+:root{
+  --em:#50C878; --rust:#C4572E; --deep:#175233; --deep2:#0E3A22;
+  --bg1:#ffffff; --bg2:#9be5aa;
+  --ink:#12351F; --sub:#4E7A61;
+  --surface:#FFFFFF; --surface2:#EFFBF2; --line:#CFEAD8;
+  --shadow:#175233;
+  --f-disp:'Aujournuit','Fredoka',sans-serif;
+  --f-body:'NimbusSanL','Archivo',sans-serif;
+  --f-mono:'Minecraftia','Silkscreen',monospace;
+  --r:22px;
+}
+[data-theme="dark"]{
+  --bg1:#0A2114; --bg2:#0F3A22;
+  --ink:#EAF7EE; --sub:#8FBCA0;
+  --surface:#123822; --surface2:#0E2C1B; --line:#1E5233;
+  --shadow:#04140B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--f-body);font-weight:700;color:var(--ink);min-height:100vh;overflow-x:hidden}
+
+/* ============ ANIMATED BACKGROUND (moves + pulses, stays quiet) ============ */
+.bgfx{position:fixed;inset:0;z-index:-2;background:linear-gradient(140deg,var(--bg1),var(--bg2));background-size:220% 220%;animation:bgmove 26s ease-in-out infinite alternate}
+@keyframes bgmove{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+.bgfx i{position:absolute;border-radius:50%;filter:blur(90px);animation:drift 34s ease-in-out infinite alternate,pulse 9s ease-in-out infinite}
+.bgfx i:nth-child(1){width:52vmax;height:52vmax;left:-18vmax;top:-14vmax;background:rgba(80,200,120,.16)}
+.bgfx i:nth-child(2){width:38vmax;height:38vmax;right:-12vmax;bottom:-14vmax;background:rgba(196,87,46,.12);animation-duration:41s,11s}
+[data-theme="dark"] .bgfx i:nth-child(1){background:rgba(80,200,120,.10)}
+[data-theme="dark"] .bgfx i:nth-child(2){background:rgba(196,87,46,.09)}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(9vmax,7vmax) scale(1.12)}}
+@keyframes pulse{0%,100%{opacity:.75}50%{opacity:1}}
+
+/* ============ SHELL ============ */
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+header{position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);background:color-mix(in srgb,var(--bg1) 72%,transparent);border-bottom:2px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;padding:12px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logomark{width:38px;height:38px;border-radius:12px;background:var(--em);box-shadow:0 4px 0 var(--shadow);display:grid;place-items:center;transform:rotate(-6deg);color:#fff}
+.logomark svg{width:22px;height:22px}
+.logotxt{font-family:var(--f-disp);font-size:24px;font-weight:600;letter-spacing:.5px}
+.logotxt b{color:var(--rust);font-weight:600}
+nav{margin-left:auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px;max-width:100%}
+nav::-webkit-scrollbar{display:none}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);font-size:13px;padding:8px 13px;border-radius:999px;transition:.15s}
+nav a:hover{background:var(--surface2)}
+nav a.on{background:var(--em);color:#fff;box-shadow:0 3px 0 var(--shadow)}
+.tgl{display:flex;gap:6px;align-items:center}
+.icbtn{width:36px;height:36px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;box-shadow:0 3px 0 var(--shadow);transition:.12s}
+.icbtn:hover{transform:translateY(-1px)}
+.icbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shadow)}
+.icbtn .ic{width:17px;height:17px}
+main{padding:30px 0 90px;min-height:70vh}
+footer{border-top:2px solid var(--line);padding:26px 0 40px;color:var(--sub);font-size:13px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.footag{font-family:var(--f-mono);font-size:10px;letter-spacing:1px}
+
+/* ============ SHARED COMPONENTS ============ */
+.ic{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-body);font-weight:700;font-size:15px;color:#fff;background:var(--em);border:none;cursor:pointer;padding:13px 22px;border-radius:16px;box-shadow:0 5px 0 var(--shadow);transition:.12s;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 var(--shadow)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shadow)}
+.btn.rust{background:var(--rust)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:0 5px 0 var(--shadow)}
+.btn.sm{padding:8px 14px;font-size:13px;border-radius:12px;box-shadow:0 4px 0 var(--shadow)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:10px;letter-spacing:1px;padding:6px 12px;border-radius:999px;background:var(--surface);border:2px solid var(--line);color:var(--ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--em);animation:pulse 2s infinite}
+.chip.rust{background:var(--rust);border-color:var(--rust);color:#fff}
+.chip.em{background:var(--em);border-color:var(--em);color:#fff}
+.kicker{font-family:var(--f-mono);font-size:11px;letter-spacing:2px;color:var(--rust);margin-bottom:8px}
+.h{font-family:var(--f-disp);font-weight:600;font-size:clamp(34px,5.4vw,54px);line-height:1.04;margin-bottom:14px}
+.lead{color:var(--sub);font-size:16px;max-width:56ch;line-height:1.55}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:0 6px 0 var(--shadow);padding:24px}
+.mono{font-family:var(--f-mono)}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;text-align:left}
+.field label{font-family:var(--f-mono);font-size:10px;letter-spacing:1.5px;color:var(--sub)}
+.field label b{color:var(--rust)}
+.field input{font-family:var(--f-body);font-weight:700;font-size:16px;color:var(--ink);background:var(--surface2);border:2px solid var(--line);border-radius:14px;padding:12px 15px;outline:none;transition:.15s;width:100%}
+.field input:focus{border-color:var(--em);box-shadow:0 0 0 4px rgba(80,200,120,.18)}
+.help{font-size:12.5px;color:var(--sub);line-height:1.5;font-weight:400;font-family:var(--f-body)}
+.divider{height:2px;background:var(--line);border:none;border-radius:2px;margin:26px 0}
+a.linkish{color:var(--rust)}
+
+/* ============ ONBOARDING STAGE ============ */
+body.onboard header,body.onboard footer{display:none}
+#stage{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 22px;cursor:pointer;user-select:none}
+#dlg{max-width:720px;width:100%;opacity:0;transition:opacity .28s ease;position:relative;min-height:180px}
+#dlg.in{opacity:1}
+#dlg .line{font-family:var(--f-disp);font-weight:600;font-size:clamp(26px,4.6vw,44px);line-height:1.22;margin:6px 0;color:var(--ink)}
+#dlg .line.small{font-family:var(--f-body);font-size:clamp(15px,2vw,18px);color:var(--sub);margin-top:12px}
+#dlg .hl{display:inline-block;background:var(--rust);color:#fff;border-radius:12px;padding:0 14px;margin:0 4px;box-shadow:0 4px 0 var(--shadow);transform:rotate(-1.5deg)}
+.cur{display:inline-block;width:.55em;height:1em;background:var(--em);border-radius:4px;margin-left:6px;vertical-align:-.12em;animation:blink 1s steps(1) infinite;box-shadow:0 3px 0 var(--shadow)}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+#controls{margin-top:26px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
+#controls>*{animation:rise .35s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}
+.trollrow{display:inline-flex;align-items:center;gap:8px;margin-top:10px}
+.trollrow span{font-family:var(--f-body);font-size:14px;color:var(--rust)}
+.qmark{width:26px;height:26px;border-radius:50%;border:2px solid var(--rust);background:transparent;color:var(--rust);font-family:var(--f-mono);font-size:12px;cursor:pointer;position:relative;animation:pulse 2.4s infinite}
+.qtip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) rotate(-1deg);background:var(--deep);color:#fff;font-family:var(--f-body);font-weight:700;font-size:12px;padding:9px 13px;border-radius:12px;white-space:nowrap;box-shadow:0 4px 0 var(--shadow);opacity:0;pointer-events:none;transition:.2s}
+.qtip.show{opacity:1}
+.qtip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--deep)}
+.dots{display:flex;gap:7px;margin-top:38px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);transition:.25s}
+.dots i.done{background:var(--em)}
+.dots i.now{background:var(--rust);transform:scale(1.35)}
+.hint{position:fixed;bottom:22px;left:0;right:0;text-align:center;font-family:var(--f-mono);font-size:10px;letter-spacing:2px;color:var(--sub);animation:pulse 2.4s infinite}
+.formbox{background:var(--surface);border-radius:var(--r);box-shadow:0 6px 0 var(--shadow);padding:22px;max-width:440px;width:100%;margin-top:18px;cursor:default}
+.pickerbox{background:var(--surface);border-radius:var(--r);box-shadow:0 6px 0 var(--shadow);padding:18px;max-width:520px;width:100%;margin-top:18px;cursor:default;text-align:left}
+.pickerbox input{width:100%;margin-bottom:12px}
+.picklist{max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px}
+.pickhead{font-family:var(--f-mono);font-size:10px;letter-spacing:1.5px;color:var(--rust);margin:10px 0 4px}
+.pickbtn{font-family:var(--f-body);font-weight:700;font-size:14px;text-align:left;padding:9px 13px;border-radius:12px;border:2px solid var(--line);background:var(--surface2);color:var(--ink);cursor:pointer;transition:.12s}
+.pickbtn:hover{border-color:var(--em);background:var(--surface)}
+.pickbtn.g{border-left:6px solid var(--rust)}
+
+/* ============ GLINT SWEEP ============ */
+#glint{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+#glint::before{content:'';position:absolute;top:-25%;bottom:-25%;width:34%;left:-50%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.8),transparent);transform:skewX(-18deg);opacity:0}
+#glint.go::before{animation:gl .72s ease forwards}
+@keyframes gl{0%{left:-45%;opacity:0}18%{opacity:1}100%{left:120%;opacity:0}}
+
+/* ============ HOME / LANDING ============ */
+.hero{display:flex;gap:44px;align-items:center;flex-wrap:wrap;padding:26px 0 10px}
+.hero-l{flex:1 1 380px;min-width:300px}
+.hero h1{font-family:var(--f-disp);font-weight:600;font-size:clamp(52px,9vw,104px);line-height:.98;letter-spacing:-1px}
+.hero h1 em{font-style:normal;color:var(--rust)}
+.statrow{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.ticket{flex:0 1 340px;background:var(--surface);border-radius:26px;box-shadow:0 9px 0 var(--shadow);transform:rotate(-2deg);transition:.25s;position:relative;overflow:hidden}
+.ticket:hover{transform:rotate(0deg) translateY(-6px)}
+.ticket .thead{background:var(--deep);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}
+[data-theme="dark"] .ticket .thead{background:var(--shadow)}
+.ticket .thead b{font-family:var(--f-disp);font-size:24px;font-weight:600;letter-spacing:.5px}
+.ticket .thead .ic{width:20px;height:20px}
+.ticket .tbody{padding:20px 22px 24px}
+.ticket .conn{font-family:var(--f-mono);font-size:11px;letter-spacing:1.5px;color:var(--rust);margin-bottom:14px}
+.price{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:2px dashed var(--line)}
+.price:last-of-type{border-bottom:none}
+.price span{font-size:14px;color:var(--sub)}
+.price b{font-family:var(--f-mono);font-size:20px;color:var(--ink)}
+.price b small{font-size:11px;color:var(--rust)}
+.ticket .btn{width:100%;justify-content:center;margin-top:16px}
+.shine{position:absolute;top:14px;right:18px;width:34px;height:12px;background:rgba(255,255,255,.85);border-radius:99px;transform:rotate(-28deg)}
+.shine::after{content:'';position:absolute;top:18px;right:-14px;width:8px;height:8px;background:rgba(255,255,255,.85);border-radius:50%}
+.ticker{margin:44px 0 8px;border-top:2px solid var(--line);border-bottom:2px solid var(--line);overflow:hidden;padding:11px 0;background:var(--surface2)}
+.ticker div{display:flex;gap:0;white-space:nowrap;animation:tick 26s linear infinite;font-family:var(--f-mono);font-size:11px;letter-spacing:2px;color:var(--rust)}
+.ticker span{padding:0 18px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.homelinks{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+
+/* ============ SLOT BOARD ============ */
+.boardwrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+#board{border-radius:26px;touch-action:manipulation}
+.legend{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.legend .chip b{color:var(--rust)}
+.howto{font-size:13.5px;color:var(--sub);text-align:center;max-width:60ch;line-height:1.55;font-weight:400}
+
+/* ============ RULES ============ */
+.rulelist{display:flex;flex-direction:column;gap:14px;margin-top:26px}
+.rule{display:flex;gap:18px;align-items:flex-start;background:var(--surface);border-radius:20px;box-shadow:0 5px 0 var(--shadow);padding:18px 22px}
+.rule .num{font-family:var(--f-mono);font-size:26px;color:var(--em);flex:none;width:52px}
+.rule:nth-child(even) .num{color:var(--rust)}
+.rule h4{font-size:16px;margin-bottom:3px}
+.rule p{font-size:13.5px;color:var(--sub);font-weight:400;line-height:1.5}
+.ladder{display:flex;flex-direction:column;gap:18px;margin-top:34px}
+.strikecard{max-width:620px;background:var(--surface);border-radius:22px;box-shadow:0 6px 0 var(--shadow);padding:20px 24px;border-top:8px solid var(--em)}
+.strikecard:nth-of-type(2){margin-left:44px;border-top-color:#7FBF9A}
+.strikecard:nth-of-type(3){margin-left:88px;border-top-color:var(--rust)}
+.strikecard:nth-of-type(4){margin-left:132px;border-top-color:var(--deep);background:var(--deep);color:#fff}
+[data-theme="dark"] .strikecard:nth-of-type(4){background:var(--shadow)}
+.strikecard h4{font-family:var(--f-mono);font-size:13px;letter-spacing:2px;color:var(--rust);margin-bottom:8px}
+.strikecard:nth-of-type(4) h4{color:#FFB68F}
+.strikecard p{font-size:14.5px;line-height:1.55}
+.strikecard p b{color:var(--em)}
+.strikecard:nth-of-type(4) p b{color:#7BE0A3}
+.resetbox{margin-top:34px;background:var(--surface2);border:2px dashed var(--em);border-radius:20px;padding:20px 24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.resetbox p{font-size:14px;line-height:1.55;color:var(--sub);font-weight:400;flex:1;min-width:240px}
+.rulesgrid{display:grid;grid-template-columns:250px 1fr;gap:44px;align-items:start}
+.side{position:sticky;top:96px}
+@media(max-width:820px){.rulesgrid{grid-template-columns:1fr}.side{position:static}.strikecard:nth-of-type(2),.strikecard:nth-of-type(3),.strikecard:nth-of-type(4){margin-left:0}}
+
+/* ============ TERMS ============ */
+.doc{max-width:760px}
+.doc section{margin-bottom:38px}
+.doc h3{font-family:var(--f-disp);font-weight:600;font-size:27px;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.doc h3 .ic{color:var(--rust);width:22px;height:22px}
+.doc p,.doc li{font-size:14.5px;line-height:1.7;color:var(--sub);font-weight:400;margin-bottom:8px}
+.doc b{color:var(--ink);font-weight:700}
+.doc ul{padding-left:20px}
+.receipt{background:var(--surface);border:2px dashed var(--rust);border-radius:18px;padding:20px 24px;transform:rotate(-.6deg);margin-top:14px;font-family:var(--f-mono);font-size:12px;line-height:2;color:var(--ink);box-shadow:0 6px 0 var(--shadow)}
+.receipt .rt{text-align:center;letter-spacing:2px;border-bottom:2px dashed var(--line);padding-bottom:8px;margin-bottom:8px;color:var(--rust)}
+
+/* ============ Q&A ============ */
+.qa-tools{max-width:420px;margin:6px 0 22px}
+.qaitem{background:var(--surface);border-radius:18px;box-shadow:0 5px 0 var(--shadow);margin-bottom:12px;overflow:hidden}
+.qaitem .q{width:100%;display:flex;gap:14px;align-items:center;text-align:left;background:none;border:none;cursor:pointer;padding:16px 20px;font-family:var(--f-body);font-weight:700;font-size:15px;color:var(--ink)}
+.qaitem .q .qn{font-family:var(--f-mono);font-size:13px;color:var(--rust);flex:none}
+.qaitem .q .ic{margin-left:auto;transition:.25s;color:var(--sub)}
+.qaitem.open .q .ic{transform:rotate(45deg);color:var(--em)}
+.qaitem .a{display:none;padding:0 20px 18px 54px;font-size:14px;line-height:1.7;color:var(--sub);font-weight:400}
+.qaitem.open .a{display:block;animation:rise .25s both}
+.qaitem .a b{color:var(--ink)}
+
+/* ============ ACCOUNT ============ */
+.acct{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.pfp{width:104px;height:104px;border-radius:50%;background:var(--em);color:#fff;display:grid;place-items:center;font-family:var(--f-disp);font-size:44px;font-weight:600;box-shadow:0 5px 0 var(--shadow);overflow:hidden;position:relative;flex:none}
+.pfp img{width:100%;height:100%;object-fit:cover}
+.pfpedit{position:absolute;inset:0;display:grid;place-items:center;background:rgba(6,26,14,.45);opacity:0;cursor:pointer;transition:.2s;color:#fff;border:none;border-radius:50%}
+.pfp:hover .pfpedit{opacity:1}
+.nametag{font-family:var(--f-disp);font-weight:600;font-size:34px;line-height:1.1;word-break:break-word}
+.tagchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* ============ WHEEL ============ */
+.wheelwrap{display:flex;gap:44px;flex-wrap:wrap;align-items:center;justify-content:center}
+#wheelCv{max-width:100%}
+.wheel-side{max-width:320px;display:flex;flex-direction:column;gap:14px}
+.winlist{display:flex;flex-direction:column;gap:8px}
+.winrow{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border-radius:12px;padding:9px 14px;font-size:13px}
+.winrow .mono{font-size:10px;color:var(--rust)}
+
+/* ============ DASHBOARD ============ */
+.gate{max-width:420px;margin:40px auto;text-align:center}
+.statrow2{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
+.stat{background:var(--surface);border-radius:18px;box-shadow:0 5px 0 var(--shadow);padding:16px 22px;min-width:140px;flex:1}
+.stat b{font-family:var(--f-mono);font-size:26px;color:var(--em);display:block}
+.stat:nth-child(even) b{color:var(--rust)}
+.stat span{font-family:var(--f-mono);font-size:9px;letter-spacing:1.5px;color:var(--sub)}
+.tblwrap{overflow-x:auto;background:var(--surface);border-radius:20px;box-shadow:0 6px 0 var(--shadow);padding:6px 4px;margin-bottom:30px}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{font-family:var(--f-mono);font-size:9px;letter-spacing:1.5px;color:var(--sub);text-align:left;padding:12px 14px;border-bottom:2px solid var(--line)}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td .mono{font-size:11px}
+.rowbtns{display:flex;gap:6px}
+.firstbanner{background:var(--em);color:#fff;border-radius:18px;box-shadow:0 5px 0 var(--shadow);padding:16px 22px;display:flex;align-items:center;gap:12px;margin-bottom:26px;font-size:15px}
+.firstbanner .ic{width:22px;height:22px}
+.sech{font-family:var(--f-mono);font-size:11px;letter-spacing:2px;color:var(--rust);margin:30px 0 12px}
+.banrow td{background:rgba(196,87,46,.08)}
+
+/* ============ MODAL & TOAST ============ */
+#overlay{position:fixed;inset:0;background:rgba(6,26,14,.5);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+#overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:24px;box-shadow:0 9px 0 var(--shadow);padding:26px;max-width:430px;width:100%;animation:rise .3s cubic-bezier(.2,1.4,.4,1) both;max-height:86vh;overflow-y:auto}
+.modal h3{font-family:var(--f-disp);font-weight:600;font-size:26px;margin-bottom:6px}
+.modal .msub{font-size:13.5px;color:var(--sub);font-weight:400;line-height:1.55;margin-bottom:18px}
+.modal .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.planpick{display:flex;gap:12px}
+.planpick button{flex:1;border:2px solid var(--line);background:var(--surface2);border-radius:16px;padding:14px;cursor:pointer;text-align:center;color:var(--ink);transition:.15s}
+.planpick button:hover{border-color:var(--em);transform:translateY(-2px)}
+.planpick b{font-family:var(--f-mono);font-size:19px;display:block;color:var(--em)}
+.planpick button:hover b{color:var(--rust)}
+.planpick span{font-family:var(--f-mono);font-size:9px;letter-spacing:1px;color:var(--sub)}
+#toasts{position:fixed;bottom:24px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:99;pointer-events:none}
+.toast{background:var(--deep);color:#fff;border-radius:14px;padding:12px 20px;font-size:14px;box-shadow:0 5px 0 var(--shadow);animation:rise .3s both;display:flex;gap:9px;align-items:center;max-width:90vw}
+.toast .ic{width:16px;height:16px;color:var(--em)}
+[data-theme="dark"] .toast{background:var(--shadow)}
+</style>
+</head>
+<body>
+
+<!-- icon sprite -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a15 15 0 0 1 19 0"/><path d="M5.5 12.5a10.5 10.5 0 0 1 13 0"/><path d="M8.5 16a6 6 0 0 1 7 0"/><path d="M12 19.5h.01"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.2 9a2.9 2.9 0 0 1 5.6 1c0 1.8-2.8 2.2-2.8 3.6"/><path d="M12 17.2h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><path d="M12 17.6h.01"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M14 5v14" stroke-dasharray="2 3"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="i-wheel" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-gamepad" viewBox="0 0 24 24"><path d="M6 11h4M8 9v4"/><circle cx="15" cy="10" r="1"/><circle cx="17.5" cy="12.5" r="1"/><path d="M17.3 5H6.7a4 4 0 0 0-4 3.6C2.4 11 2 13.9 2 15.5A2.5 2.5 0 0 0 4.5 18c1 0 1.6-.5 2.2-1.1l.9-.9h9l.9.9c.6.6 1.2 1.1 2.1 1.1A2.5 2.5 0 0 0 22 15.5c0-1.6-.4-4.5-.7-6.9A4 4 0 0 0 17.3 5Z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 18h18M4 17 5.5 8 10 12l2-7 2 7 4.5-4L20 17z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-gavel" viewBox="0 0 24 24"><path d="m14 13-7.5 7.5a2.12 2.12 0 1 1-3-3L11 10"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 20h16"/></symbol>
+</svg>
+
+<div class="bgfx"><i></i><i></i></div>
+<div id="glint"></div>
+
+<header><div class="wrap bar">
+  <a class="logo" href="#/home">
+    <span class="logomark"><svg class="ic"><use href="#i-wifi"/></svg></span>
+    <span class="logotxt">jspot<b>slot</b></span>
+  </a>
+  <nav id="nav"></nav>
+  <div class="tgl">
+    <button class="icbtn" id="langBtn" title="English / Tagalog">EN</button>
+    <button class="icbtn" id="themeBtn" title="light / dark"><svg class="ic"><use href="#i-moon"/></svg></button>
+  </div>
+</div></header>
+
+<main id="app"></main>
+
+<footer><div class="wrap">
+  <span class="footag">JSPOTSLOT · FOR 11-BLOCK 2 ONLY — DON'T SHARE THIS LINK OUTSIDE THE SECTION</span>
+  <span class="footag">STRIKES RESET MONTHLY · 12:00 AM UTC+8</span>
+</div></footer>
+
+<div id="toasts"></div>
+<div id="overlay"><div class="modal" id="modal"></div></div>
+
+<script>
+/* =====================================================================
+   JSPOTSLOT — single-file app for 11-Block 2
+   Routes: #/home #/rules #/account #/spinwheelie #/loadslots
+           #/terms #/qanda #/dashboard
+   Storage: everything is saved to localStorage first; whenever Supabase
+   answers, the same data is pushed/pulled so devices stay in sync.
+   ===================================================================== */
+
+/* ---------- Supabase (anon key ONLY — keep secret/service keys server-side!) ---------- */
+const SUPA_URL='https://akwpzflqcyzjjpaahwmy.supabase.co';
+const SUPA_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrd3B6ZmxxY3l6ampwYWFod215Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5NzkxNDYsImV4cCI6MjEwNTU1NTE0Nn0.6DbTShoDeDHoRZOjFkW61Uug-Jd3wnwB80R2Um1vgIU';
+const SBH={'apikey':SUPA_ANON,'Authorization':'Bearer '+SUPA_ANON,'Content-Type':'application/json'};
+
+/* =====================================================================
+   BLOCK 2 NAME LIST
+   TODO: REPLACE these 40 placeholder names with the REAL 11-Block 2 list.
+   Format: ['m'|'g', 'Full Name']  (m = boy, g = girl)
+   ===================================================================== */
+const ROSTER=[
+['m','Aeron Castillo'],['g','Aiah Navarro'],['m','Andrei Lopez'],['g','Bea Mendoza'],
+['m','Calix Rivera'],['g','Cessa Reyes'],['m','Dane Aquino'],['g','Danna Flores'],
+['m','EJ Salvador'],['g','Ella Bautista'],['m','Francis Dela Cruz'],['g','Fina Gonzales'],
+['m','Gab Villanueva'],['g','Gia Torres'],['m','Harold Ramos'],['g','Hazel Cruz'],
+['m','Ivo Manalo'],['g','Iris Domingo'],['m','Jomari Santos'],['g','Jasmine Villareal'],
+['m','Kean Garcia'],['g','Kat Salcedo'],['m','Luis Pagtalunan'],['g','Liza Marasigan'],
+['m','Miguel Torres'],['g','Mara Delos Santos'],['m','Niko Bautista'],['g','Nikki Alcantara'],
+['m','Owen Cabrera'],['g','Onika de Guzman'],['m','Paolo Mendiola'],['g','Pauline Aguilar'],
+['m','Rafael Lim'],['g','Rhea Manalo'],['m','Sandro Velasco'],['g','Sophia Aquino'],
+['m','Troy Fernandez'],['g','Trisha Lopez'],['m','Vince Castro'],['g','Wynona Garcia']
+];
+
+/* ---------- tiny helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ic=(n,st='')=>`<svg class="ic" ${st?`style="${st}"`:''} aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const peso=n=>'₱'+n;
+
+/* ---------- i18n ---------- */
+const T={
+ en:{
+  nav:{home:'Home',loadslots:'Slots',spinwheelie:'Wheel',rules:'Rules',terms:'Terms',qanda:'Q&A',account:'Account',dashboard:'Console'},
+  click:'CLICK ANYWHERE TO CONTINUE',
+  lang:['First things first — English or Tagalog?'],
+  theme:['Nice pick. Now — light mode or dark mode?'],
+  name:['May I ask your name, please?',"It doesn't really have to be your full name."],
+  troll:"pls don't troll...", tip:'there might be consequences if you do',
+  nameph:'type your name here',
+  gender:['And also — gender?','I know there are 84.38% more girls than boys here.','But I still need to clarify — thanks!!'],
+  boy:'Boy', girl:'Girl', yes:'Yes', no:'No',
+  verify:n=>['You\u2019re ',{hl:n},'. Am I right?'],
+  nomatch:n=>['Hmm — ',{hl:n},'?', 'That\u2019s not ringing a bell on my Block 2 list...'],
+  pickhead:'Pick your real name — alphabetical, boys first, then girls.',
+  boys:'BOYS', girls:'GIRLS', filter:'filter names...',
+  thanks:['Thank you! It seems distinguishable.'],
+  games:['Do you play games?'],
+  gamerYes:['Noted. A gamer — Je will see that on the dashboard.'],
+  gamerNo:['Respect. Casual browsing it is.'],
+  device:['Now, what I need from you:'],
+  deviceLbl:'DEVICE NAME', req:'(required)', macLbl:'MAC ADDRESS', opt:'(optional)',
+  machelp:"MAC Address — sounds scary? Well, it's not what you think. It's just an indicator of which device is connected to the hotspot, so I can tell who that fersuns is.",
+  devph:'e.g. Infinix Hot 30 / Redmi 12', macph:'AA:BB:CC:DD:EE:FF',
+  welcome:['Welcome to jspots!'], welsub:"You're officially in the books, Block 2. Go grab a slot.",
+  ctaSlot:'get a slot', ctaQa:'explore q&a', ctaRules:'read the rules',
+  kick:'11-BLOCK 2 · SLOT SECURING SITE',
+  heroSub:'One hotspot, four concurrent slots, and a classmate named Je on load duty. Claim it, secure it, or outbid whoever\u2019s holding it.',
+  getSlot:'GET A SLOT', conn:'CONNECT TO MIH — JE\u2019S HOTSPOT', day:'1 Day Plan', week:'1 Week Plan', free:'connect at Free Times!', openBoard:'open the slot board',
+  needSetup:'You haven\u2019t done the intro yet — let\u2019s fix that.', startSetup:'start the intro',
+ },
+ tg:{
+  nav:{home:'Home',loadslots:'Slots',spinwheelie:'Gulong',rules:'Alituntunin',terms:'Kasunduan',qanda:'Tanong',account:'Account',dashboard:'Panel'},
+  click:'I-CLICK KAHIT SAAN PARA MAGPATULOY',
+  lang:['Una muna — English o Tagalog?'],
+  theme:['Ayos. Ngayon naman — light mode o dark mode?'],
+  name:['Pwede ba kitang tanungin — ano ang pangalan mo?','Hindi mo kailangang ibigay ang buong pangalan.'],
+  troll:"pls, wag kang magtroll...", tip:"pwede kang makatikim ng konsekwensya kapag ginawa mo 'yan",
+  nameph:'i-type ang pangalan mo dito',
+  gender:['At tsaka — gender?','Alam kong 84.38% mas maraming babae kaysa lalaki dito.','Pero kailangan ko pa rin itong i-clarify — salamat!!'],
+  boy:'Lalaki', girl:'Babae', yes:'Oo', no:'Hindi',
+  verify:n=>['Ikaw si ',{hl:n},", 'no? Tama ba?"],
+  nomatch:n=>['Hmm — ',{hl:n},'?', "Wala sa listahan ko ng Block 2..."],
+  pickhead:'Piliin ang tunay mong pangalan — alphabetical, boys muna, tapos girls.',
+  boys:'BOYS', girls:'GIRLS', filter:'salamatan ng pangalan...',
+  thanks:['Salamuch! Mukhang madali kitang makilala.'],
+  games:['Naglalaro ka ba ng games?'],
+  gamerYes:["Noted. Gamer pala — makikita ni Je 'yan sa panel."],
+  gamerNo:['Respect. Pang-scroll lang pala.'],
+  device:["Ngayon, ang kailangan ko mula sa'yo:"],
+  deviceLbl:'DEVICE NAME', req:'(kailangan)', macLbl:'MAC ADDRESS', opt:'(option lang)',
+  machelp:"MAC Address — nakakatakot pakinggan? Hindi 'yan ang iniisip mo. Indicator lang 'yan kung anong device ang nakakonekta sa hotspot, para malaman ko kung sino 'yang fersuns na 'yan.",
+  devph:'hal. Infinix Hot 30 / Redmi 12', macph:'AA:BB:CC:DD:EE:FF',
+  welcome:['Welcome sa jspots!'], welsub:'Opisyal ka nang nakarehistro, Block 2. Kunin mo na ang slot mo.',
+  ctaSlot:'kunin ang slot', ctaQa:'tignan ang q&a', ctaRules:'basahin ang alituntunin',
+  kick:'11-BLOCK 2 · SLOT SECURING SITE',
+  heroSub:'Isang hotspot, apat na concurrent slots, at isang classmate na si Je na naka-duty sa load. Kunin mo, i-secure, o lamutan ng bid ang hawak.',
+  getSlot:'GET A SLOT', conn:'CONNECT TO MIH — HOTSPOT NI JE', day:'1 Day Plan', week:'1 Week Plan', free:'connect at Free Times!', openBoard:'buksan ang slot board',
+  needSetup:"Hindi ka pa nakakadaan sa intro — ayusin natin 'yan.", startSetup:'simulan ang intro',
+ }
+};
+const L=()=>T[S.lang]||T.en;
+
+/* ---------- local state ---------- */
+const LSK='jspots_v1';
+let S=JSON.parse(localStorage.getItem(LSK)||'{}');
+S.lang=S.lang||'en'; S.theme=S.theme||'light'; S.user=S.user||null; S.onboarded=!!S.onboarded;
+const saveS=()=>localStorage.setItem(LSK,JSON.stringify(S));
+
+/* ---------- board (slots/bids/students/wheels) ---------- */
+const freshSlots=()=>[1,2,3,4].map(n=>({slot:n,occupant:null,plan:null,secured:false,bid:0,bidder:null,claimed_at:null}));
+let BOARD={slots:freshSlots(),bids:[],students:[],wheels:[]};
+try{const b=JSON.parse(localStorage.getItem('jspots_board'));if(b&&b.slots)BOARD=b;}catch(e){}
+const saveBoard=()=>localStorage.setItem('jspots_board',JSON.stringify(BOARD));
+let cloudOK=false;
+const dataHooks=new Set();
+const onData=f=>dataHooks.add(f);
+function notify(){dataHooks.forEach(f=>{try{f()}catch(e){}})}
+
+async function sbGet(t){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?select=*`,{headers:SBH});if(!r.ok)throw new Error(t);return r.json()}
+async function sbUp(t,rows){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?on_conflict=${t==='slots'?'slot':'name'}`,{method:'POST',headers:{...SBH,Prefer:'resolution=merge-duplicates'},body:JSON.stringify(rows)});if(!r.ok)throw new Error(t)}
+async function sbPatch(t,match,patch){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?${match}`,{method:'PATCH',headers:SBH,body:JSON.stringify(patch)});if(!r.ok)throw new Error(t)}
+async function sbIns(t,row){const r=await fetch(`${SUPA_URL}/rest/v1/${t}`,{method:'POST',headers:SBH,body:JSON.stringify(row)});if(!r.ok)throw new Error(t)}
+async function sbDel(t,match){const r=await fetch(`${SUPA_URL}/rest/v1/${t}?${match}`,{method:'DELETE',headers:SBH});if(!r.ok)throw new Error(t)}
+
+let pendingOps=[];
+try{pendingOps=JSON.parse(localStorage.getItem('jspots_pending')||'[]')}catch(e){}
+const savePending=()=>localStorage.setItem('jspots_pending',JSON.stringify(pendingOps));
+
+async function applyOp(op){ // retry a write made while offline
+  if(op.type==='claim'){await sbPatch('slots',`slot=eq.${op.slot}`,{occupant:op.name,plan:op.plan,secured:false,bid:0,bidder:null,claimed_at:op.at});await sbUp('students',[{name:op.name,plan:op.plan}]);}
+  if(op.type==='bid'){await sbIns('bids',{slot:op.slot,bidder:op.name,amount:op.amount});await sbPatch('slots',`slot=eq.${op.slot}`,{bid:op.amount,bidder:op.name});}
+}
+async function pull(){
+  try{
+    const [sl,bi,st,wh]=await Promise.all([sbGet('slots'),sbGet('bids'),sbGet('students'),sbGet('wheels')]);
+    if(sl.length===4){
+      BOARD.slots=sl.sort((a,b)=>a.slot-b.slot).map(s=>({slot:s.slot,occupant:s.occupant,plan:s.plan,secured:!!s.secured,bid:s.bid||0,bidder:s.bidder||null,claimed_at:s.claimed_at}));
+      BOARD.bids=bi; BOARD.students=st; BOARD.wheels=wh; cloudOK=true;
+      // sync my penalty info + retry queued writes
+      if(S.user){const me=st.find(x=>x.name===S.user.name);if(me){S.user.strikes=me.strikes;S.user.perm_pct=me.perm_pct||0;S.user.temp_pct=me.temp_pct||0;S.user.banned=!!me.banned;saveS();}}
+      if(pendingOps.length){const keep=[];for(const op of pendingOps){try{await applyOp(op)}catch(e){keep.push(op)}}pendingOps=keep;savePending();}
+    }else cloudOK=false;
+  }catch(e){cloudOK=false;}
+  saveBoard(); notify();
+}
+let bc=null; try{bc=new BroadcastChannel('jspots');bc.onmessage=()=>pull()}catch(e){}
+const shout=()=>{try{bc&&bc.postMessage('pull')}catch(e){}}
+
+/* ---------- countdowns ---------- */
+function nextFridayRefresh(){ // Friday 4:00 PM PH (UTC+8) => 08:00 UTC
+  const n=new Date(); let t=new Date(Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate(),8,0,0));
+  while(t.getUTCDay()!==5||t<=n)t=new Date(t.getTime()+86400e3); return t.getTime();
+}
+function nextMonthReset(){ // 1st of month, 12:00 AM UTC+8 => 16:00 UTC on the last day of prev month
+  const n=new Date();
+  const thisR=Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),1)-8*3600e3;
+  const nextR=Date.UTC(n.getUTCFullYear(),n.getUTCMonth()+1,1)-8*3600e3;
+  return n.getTime()<thisR?thisR:nextR;
+}
+function fmtCd(ms){ms=Math.max(0,ms);const d=Math.floor(ms/86400e3),h=Math.floor(ms%86400e3/3600e3),m=Math.floor(ms%3600e3/60e3),s=Math.floor(ms%60e3);
+  return (d?d+'d ':'')+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+
+/* ---------- audio (tiny local synth) ---------- */
+let AC=null;
+function beep(f=760,d=.05,type='square',g=.05){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator(),gn=AC.createGain();o.type=type;o.frequency.value=f;gn.gain.value=g;
+  o.connect(gn);gn.connect(AC.destination);o.start();gn.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d+.02);}catch(e){}}
+
+/* ---------- toast & modal ---------- */
+function toast(msg,icn='check'){$('#toasts').insertAdjacentHTML('beforeend',`<div class="toast">${ic(icn)}${esc(msg)}</div>`);
+  const t=$('#toasts').lastElementChild;setTimeout(()=>{t.style.opacity=0;t.style.transition='.3s';setTimeout(()=>t.remove(),320)},2800);}
+function modal(html){$('#modal').innerHTML=html;$('#overlay').classList.add('show');}
+function closeModal(){$('#overlay').classList.remove('show')}
+ $('#overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal()});
+function confirmModal(title,sub,yesLabel,onYes,danger){modal(`<h3>${esc(title)}</h3><div class="msub">${sub}</div>
+  <div class="btnrow"><button class="btn ${danger?'rust':''}" id="mYes">${esc(yesLabel)}</button><button class="btn ghost" id="mNo">cancel</button></div>`);
+  $('#mNo').onclick=closeModal; $('#mYes').onclick=()=>{closeModal();onYes()};}
+
+/* ---------- glint ---------- */
+function glint(){const g=$('#glint');g.classList.remove('go');void g.offsetWidth;g.classList.add('go');}
+
+/* ---------- name matching (local — list-driven, no external calls) ---------- */
+const norm=s=>String(s||'').toLowerCase().replace(/[^a-z\s]/g,'').replace(/\s+/g,' ').trim();
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let prev=[...Array(n+1).keys()];
+  for(let i=1;i<=m;i++){const cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur;}return prev[n];}
+function findMatch(input){
+  const q=norm(input); if(q.length<3)return null; let best=null;
+  for(const [,name] of ROSTER){const full=norm(name),toks=full.split(' ');
+    let sc=Infinity;
+    if(full===q)sc=0;
+    else if(toks[0]===q||toks[toks.length-1]===q)sc=1;
+    else if(lev(toks[0],q)<=2||q.split(' ').some(t=>t.length>2&&lev(t,toks[0])<=2))sc=2;
+    else if(lev(full,q)<=Math.max(2,Math.floor(full.length*0.25)))sc=3;
+    if(sc<(best?best.sc:Infinity))best={name,sc};
+  }
+  return best&&best.sc<=3?best.name:null;
+}
+
+/* =====================================================================
+   ROUTER + SHELL
+   ===================================================================== */
+const app=$('#app');
+let cleanupFn=null;
+const NAVORDER=['home','loadslots','spinwheelie','rules','terms','qanda','account','dashboard'];
+function renderNav(cur){$('#nav').innerHTML=NAVORDER.map(r=>`<a href="#/${r}" class="${r===cur?'on':''}">${esc(L().nav[r])}</a>`).join('');}
+function setTheme(t){S.theme=t;saveS();document.documentElement.dataset.theme=t;
+  $('#themeBtn').innerHTML=ic(t==='light'?'moon':'sun');}
+function setLang(l){S.lang=l;saveS();$('#langBtn').textContent=l.toUpperCase();route();}
+ $('#langBtn').onclick=()=>{setLang(S.lang==='en'?'tg':'en');toast(S.lang==='en'?'English it is':'Tagalog tayo','check');};
+ $('#themeBtn').onclick=()=>{glint();setTheme(S.theme==='light'?'dark':'light');};
+
+function route(){
+  const name=(location.hash.replace('#/','')||'home').split('?')[0];
+  if(cleanupFn){try{cleanupFn()}catch(e){} cleanupFn=null;}
+  closeModal(); window.scrollTo(0,0);
+  const PAGES={home:pageHome,loadslots:pageBoard,spinwheelie:pageWheel,rules:pageRules,terms:pageTerms,qanda:pageQA,account:pageAccount,dashboard:pageDash};
+  const fn=PAGES[name]||pageHome;
+  renderNav(PAGES[name]?name:'home');
+  if(name==='home'&&!S.onboarded){document.body.classList.add('onboard');runOnboarding();}
+  else{document.body.classList.remove('onboard');fn();}
+}
+window.addEventListener('hashchange',route);
+
+/* =====================================================================
+   ONBOARDING — typewriter + traveling cursor + glint
+   ===================================================================== */
+const STEPKEYS=['hi','lang','theme','name','gender','verify','thanks','games','device','welcome'];
+let doneKeys=[];
+function renderDots(cur){$('#dots')&&($('#dots').innerHTML=STEPKEYS.map(k=>`<i class="${doneKeys.includes(k)?'done':(k===cur?'now':'')}"></i>`).join(''));}
+function markDone(k){if(k&&!doneKeys.includes(k))doneKeys.push(k);}
+
+function runOnboarding(){
+  app.innerHTML=`<section id="stage"><div id="dlg"></div><div id="controls"></div><div class="dots" id="dots"></div></section><div class="hint">${L().click}</div>`;
+  const stage=$('#stage'),dlg=$('#dlg'),ctl=$('#controls');
+  const queue=[]; let typing=false,skip=false,stageDone=false;
+
+  const Q={ // queue helpers
+    push:(...s)=>queue.push(...s),
+    unshift:(...s)=>queue.unshift(...s),
+    next(){if(!queue.length)return;play(queue.shift());},
+  };
+
+  function newCursor(){const c=document.createElement('span');c.className='cur';return c;}
+
+  async function play(step){
+    stageDone=false; ctl.innerHTML=''; dlg.classList.remove('in'); dlg.innerHTML='';
+    markDone(step.key); renderDots(step.key);
+    const cur=newCursor(); dlg.appendChild(cur); // insertion point appears at the LEFT first
+    await new Promise(r=>setTimeout(r,430));
+    dlg.classList.add('in'); typing=true; skip=false;
+    for(const line of step.lines){
+      const el=document.createElement('div'); el.className='line'+(line.small?' small':'');
+      dlg.insertBefore(el,cur);
+      for(const seg of line.parts){
+        if(seg.hl){const h=document.createElement('span');h.className='hl';h.textContent=seg.hl;el.insertBefore(h,cur);beep(880,.05,'triangle',.04);continue;}
+        for(const ch of seg){if(skip){el.insertBefore(document.createTextNode(seg),cur);break;}
+          el.insertBefore(document.createTextNode(ch),cur);await new Promise(r=>setTimeout(r,24));}
+      }
+      if(!skip)await new Promise(r=>setTimeout(r,220));
+    }
+    typing=false;
+    if(step.controls){step.controls(ctl,async val=>{ // interactive step finished
+        glint(); stageDone=true; dlg.classList.remove('in'); await new Promise(r=>setTimeout(r,260));
+        step.on&&step.on(val); Q.next();
+      });}
+    else stageDone=true;
+  }
+
+  stage.addEventListener('click',e=>{
+    if(e.target.closest('.ctl,.formbox,.pickerbox,.qtip'))return;
+    if(typing){skip=true;return;}
+    if(stageDone){const cur=queue[0];glint();dlg.classList.remove('in');setTimeout(()=>Q.next(),260);stageDone=false;}
+  });
+
+  // ---------- build the script ----------
+  const t=L();
+  Q.push({key:'hi',lines:[{parts:['hi, classmate!']},{parts:['hi, kaklase!']}]});
+
+  const langStep=()=>({key:'lang',lines:t.lang.map(x=>({parts:[x]})),controls:(ctl,fin)=>{
+    ctl.innerHTML=`<button class="btn ctl" data-v="en">English</button><button class="btn rust ctl" data-v="tg">Tagalog</button>`;
+    $$('.ctl',ctl).forEach(b=>b.onclick=()=>{S.lang=b.dataset.v;saveS();fin(b.dataset.v);});
+  },on:()=>{/* re-render rest in chosen lang via rebuild below */}});
+
+  Q.push(langStep());
+
+  Q.push({key:'theme',lines:()=>L().theme.map(x=>({parts:[x]}))(),controls:(ctl,fin)=>{
+    ctl.innerHTML=`<button class="btn ctl" data-v="light">${ic('sun')} Light</button><button class="btn rust ctl" data-v="dark">${ic('moon')} Dark</button>`;
+    $$('.ctl',ctl).forEach(b=>b.onclick=()=>{setTheme(b.dataset.v);fin(b.dataset.v);});
+  }});
+
+  // name input + circled "?" troll warning
+  Q.push({key:'name',lines:()=>[...L().name.map(x=>({parts:[x]})),{parts:[],small:true,custom:'troll'}],controls:(ctl,fin)=>{
+    const tt=L();
+    ctl.innerHTML=`<div class="formbox ctl"><div class="field"><label>${esc(tt.deviceLbl==='DEVICE NAME'?'YOUR NAME':'PANGALAN MO')} <b>*</b></label>
+      <input id="nmIn" placeholder="${esc(tt.nameph)}" maxlength="40" autocomplete="off"></div>
+      <button class="btn" id="nmGo">${ic('arrow')} continue</button></div>`;
+    const inp=$('#nmIn',ctl);inp.focus();
+    const go=()=>{const v=inp.value.trim();if(!v)return;
+      const m=findMatch(v);S._typed=v;S._match=m;saveS();fin(v);};
+    $('#nmGo',ctl).onclick=go; inp.onkeydown=e=>{if(e.key==='Enter')go()};
+  },on:()=>{
+    const typed=S._typed, m=S._match, tt=L();
+    if(m){ Q.unshift(verifyStep(m)); }
+    else{
+      Q.unshift(pickStep(),
+        {key:'verify',lines:tt.thanks.map(x=>({parts:[x]}))});
+    }
+  }});
+  // troll note with help bubble (rendered inside a small line)
+  const origPlay=play; // (the 'custom' line part is handled via DOM injection below)
+
+  function verifyStep(name){const tt=L();return{key:'verify',lines:[{parts:tt.verify(name)}],controls:(ctl,fin)=>{
+    ctl.innerHTML=`<button class="btn ctl" data-v="y">${ic('check')} ${esc(tt.yes)}</button><button class="btn ghost ctl" data-v="n">${ic('x')} ${esc(tt.no)}</button>`;
+    $$('.ctl',ctl).forEach(b=>b.onclick=()=>{
+      if(b.dataset.v==='y'){S._name=name;fin('y');}
+      else{const pk=pickStep();Q.unshift(pk,{key:'verify',lines:L().thanks.map(x=>({parts:[x]}))});fin('n',true);}
+    });
+  },on:()=>{}};}
+
+  function pickStep(){const tt=L();return{key:'name',lines:[...tt.nomatch(S._typed||'').map(x=>({parts:[x]})),{parts:[tt.pickhead],small:true}],controls:(ctl,fin)=>{
+    const box=document.createElement('div');box.className='pickerbox ctl';
+    box.innerHTML=`<div class="field" style="margin-bottom:8px"><input id="pkF" placeholder="${esc(tt.filter)}"></div><div class="picklist" id="pkL"></div>`;
+    ctl.appendChild(box);
+    const list=$('#pkL',box),f=$('#pkF',box);
+    const draw=()=>{
+      const q=norm(f.value);
+      const boys=ROSTER.filter(([,n])=>norm(n).includes(q)).filter(([g])=>g==='m').sort((a,b)=>a[1].localeCompare(b[1]));
+      const girls=ROSTER.filter(([,n])=>norm(n).includes(q)).filter(([g])=>g==='g').sort((a,b)=>a[1].localeCompare(b[1]));
+      list.innerHTML=(boys.length?`<div class="pickhead">${esc(tt.boys)}</div>`:'')+boys.map(([,n])=>`<button class="pickbtn" data-n="${esc(n)}">${esc(n)}</button>`).join('')
+        +(girls.length?`<div class="pickhead">${esc(tt.girls)}</div>`:'')+girls.map(([,n])=>`<button class="pickbtn g" data-n="${esc(n)}">${esc(n)}</button>`).join('');
+      $$('.pickbtn',list).forEach(b=>b.onclick=()=>{S._name=b.dataset.n;fin(b.dataset.n);});
+    };
+    f.oninput=draw;draw();f.focus();
+  },on:()=>{}};}
+
+  Q.push({key:'gender',lines:()=>L().gender.map(x=>({parts:[x]})),controls:(ctl,fin)=>{
+    const tt=L();
+    ctl.innerHTML=`<button class="btn ctl" data-v="m">${esc(tt.boy)}</button><button class="btn rust ctl" data-v="g">${esc(tt.girl)}</button>`;
+    $$('.ctl',ctl).forEach(b=>b.onclick=()=>{S._gender=b.dataset.v;fin(b.dataset.v);});
+  },on:()=>{Q.unshift({key:'thanks',lines:L().thanks.map(x=>({parts:[x]}))});}});
+
+  Q.push({key:'games',lines:()=>L().games.map(x=>({parts:[x]})),controls:(ctl,fin)=>{
+    const tt=L();
+    ctl.innerHTML=`<button class="btn ctl" data-v="y">${esc(tt.yes)}</button><button class="btn ghost ctl" data-v="n">${esc(tt.no)}</button>`;
+    $$('.ctl',ctl).forEach(b=>b.onclick=()=>{S._gamer=b.dataset.v==='y';fin(b.dataset.v);});
+  },on:()=>{Q.unshift({key:'games',lines:(S._gamer?L().gamerYes:L().gamerNo).map(x=>({parts:[x]}))});}});
+
+  Q.push({key:'device',lines:()=>[...L().device.map(x=>({parts:[x]})),{parts:[L().machelp],small:true}],controls:(ctl,fin)=>{
+    const tt=L();
+    ctl.innerHTML=`<div class="formbox ctl">
+      <div class="field"><label>${esc(tt.deviceLbl)} <b>*</b></label><input id="dvIn" placeholder="${esc(tt.devph)}" maxlength="40"></div>
+      <div class="field"><label>${esc(tt.macLbl)} <b>${esc(tt.opt)}</b></label><input id="mcIn" placeholder="${esc(tt.macph)}" maxlength="20"></div>
+      <button class="btn" id="dvGo">${ic('arrow')} continue</button></div>`;
+    const go=()=>{const d=$('#dvIn',ctl).value.trim();if(!d)return toast(S.lang==='tg'?'Kailangan ang device name':'Device name is required','alert');
+      S._device=d;S._mac=$('#mcIn',ctl).value.trim();fin(d);};
+    $('#dvGo',ctl).onclick=go;$('#dvIn',ctl).onkeydown=e=>{if(e.key==='Enter')$('#mcIn',ctl).focus()};
+    $('#mcIn',ctl).onkeydown=e=>{if(e.key==='Enter')go()};
+  },on:()=>{finishSignup();Q.unshift({key:'welcome',lines:L().welcome.map(x=>({parts:[x]})),controls:(ctl)=>{
+    const tt=L();ctl.innerHTML=`<button class="btn rust ctl" onclick="location.hash='#/loadslots'">${ic('ticket')} ${esc(tt.ctaSlot)}</button>
+      <button class="btn ghost ctl" onclick="location.hash='#/qanda'">${ic('help')} ${esc(tt.ctaQa)}</button>
+      <button class="btn ghost ctl" onclick="location.hash='#/rules'">${ic('shield')} ${esc(tt.ctaRules)}</button>`;
+  }});}});
+
+  Q.next();
+
+  function finishSignup(){
+    S.user={name:S._name||S._typed,gender:S._gender,device:S._device,mac:S._mac||'',gamer:!!S._gamer,
+      pfp:null,nameChanged:false,strikes:0,perm_pct:0,temp_pct:0,banned:false,joined:new Date().toISOString()};
+    S.onboarded=true; saveS();
+    sbUp('students',[{name:S.user.name,gender:S.user.gender,device:S.user.device,mac:S.user.mac,gamer:S.user.gamer,pfp:null,plan:null,strikes:0,perm_pct:0,temp_pct:0,banned:false,name_changed:false}]).then(shout).catch(()=>{});
+    doneKeys=STEPKEYS.slice();renderDots();
+  }
+}
+// inject troll-note line (with circled "?") into onboarding name steps
+new MutationObserver(()=>{
+  $$('#dlg .line').forEach(l=>{if(l.dataset.tr)return;l.dataset.tr=1;
+    if(l.previousElementSibling===null&&$('#dlg .line').length===1)return;});
+  const dlg=$('#dlg');if(!dlg)return;
+  const lines=$$('.line',dlg);
+  const target=lines.find(x=>x.textContent.includes("troll"));
+  if(target&&!$('.trollrow',target)){
+    const row=document.createElement('div');row.className='trollrow';
+    row.innerHTML=`<span>${esc(L().troll)}</span><button class="qmark">?</button><div class="qtip">${esc(L().tip)}</div>`;
+    target.appendChild(row);
+    $('.qmark',row).onclick=e=>{e.stopPropagation();$('.qtip',row).classList.toggle('show');};
+  }
+}).observe(document.body,{childList:true,subtree:true});
+
+/* =====================================================================
+   PAGE: HOME (landing)
+   ===================================================================== */
+function myPenalty(){const u=S.user||{};return (u.perm_pct||0)+(u.temp_pct||0);}
+function myPrice(base){return Math.round(base*(1+myPenalty()/100));}
+
+function pageHome(){
+  const t=L();
+  app.innerHTML=`
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-l">
+        <div class="kicker">${esc(t.kick)}</div>
+        <h1>jspot<em>slot</em></h1>
+        <p class="lead" style="margin-top:14px">${esc(t.heroSub)}</p>
+        <div class="statrow" id="homeStats"></div>
+        <div class="homelinks">
+          <a class="btn rust" href="#/loadslots">${ic('ticket')} ${esc(t.ctaSlot)}</a>
+          <a class="btn ghost" href="#/spinwheelie">${ic('wheel')} free loadspot</a>
+        </div>
+      </div>
+      <div class="ticket">
+        <div class="thead"><b>${esc(t.getSlot)}</b>${ic('wifi')}</div>
+        <div class="shine"></div>
+        <div class="tbody">
+          <div class="conn">${esc(t.conn)}</div>
+          <div class="price"><span>${esc(t.day)}</span><b>${peso(10)}</b></div>
+          <div class="price"><span>${esc(t.week)}</span><b>${peso(40)}</b></div>
+          <div class="price"><span>${esc(t.free)}</span><b><small>RECESS · VACANT</small></b></div>
+          <a class="btn" href="#/loadslots">${esc(t.openBoard)} ${ic('arrow')}</a>
+        </div>
+      </div>
+    </div>
+    <div class="ticker"><div>${'<span>NO UTANG</span><span>·</span><span>1080P MAX</span><span>·</span><span>NO HEAVY DOWNLOADS</span><span>·</span><span>WEEK PLANNERS GET PRIORITY</span><span>·</span><span>BOARD REFRESHES FRIDAY 4:00 PM</span><span>·</span><span>STRIKES RESET MONTHLY</span><span>·</span>'.repeat(2)}</div></div>
+  </div>`;
+  const paint=()=>{
+    const open=BOARD.slots.filter(s=>!s.occupant).length, sec=BOARD.slots.filter(s=>s.secured).length;
+    $('#homeStats').innerHTML=`
+      <span class="chip em"><span class="dot"></span>${open}/4 SLOTS OPEN</span>
+      <span class="chip">${ic('lock')} ${sec} SECURED</span>
+      <span class="chip">${ic('refresh')} FRI 4PM · ${fmtCd(nextFridayRefresh()-Date.now())}</span>
+      ${S.user?`<span class="chip rust">${ic('user')} ${esc(S.user.name)}</span>`:''}`;
+  };
+  paint(); onData(paint); cleanupFn=()=>dataHooks.delete(paint);
+}
+
+/* =====================================================================
+   PAGE: LOADSLOTS — the canvas board (signature piece)
+   ===================================================================== */
+let boardActive=false;
+function pageBoard(){
+  app.innerHTML=`<div class="wrap"><div class="boardwrap">
+    <div style="text-align:center"><div class="kicker">LIVE BOARD · UPDATES EVERY FEW SECONDS</div>
+    <h2 class="h">the slot board</h2></div>
+    <div id="boardWrap"><canvas id="board"></canvas></div>
+    <div class="legend">
+      <span class="chip em"><span class="dot"></span>OPEN — tap to claim</span>
+      <span class="chip rust">${ic('gavel')} occupied — tap to bid (+P5 min)</span>
+      <span class="chip">${ic('lock')} SECURED — +${peso(5)} locks it till refresh</span>
+    </div>
+    <p class="howto">One slot per person. Week Planners get picked first because fast funds buy more load.
+    The whole board refreshes every <b>Friday 4:00 PM UTC+8</b>. Full mechanics live in the <a class="linkish" href="#/rules">rules</a>.</p>
+  </div></div>`;
+
+  const cv=$('#board'),ctx=cv.getContext('2d');
+  let rects=[],hover=-1,W=0,H=0,dpr=1;
+  const THEMES=()=>document.documentElement.dataset.theme==='dark'
+    ?{card:'#143B25',deep:'#04140B',ink:'#EAF7EE',sub:'#8FBCA0',bg:'#0F3A22',line:'#1E5233'}
+    :{card:'#FFFFFF',deep:'#175233',ink:'#12351F',sub:'#4E7A61',bg:'#ffffff',line:'#CFEAD8'};
+  const EM='#50C878',RUST='#C4572E';
+
+  function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+  function fit(txt,maxW,px,font){ctx.font=`700 ${px}px ${font}`;while(ctx.measureText(txt).width>maxW&&px>9){px--;ctx.font=`700 ${px}px ${font}`;}return px;}
+
+  function size(){
+    const wrap=$('#boardWrap');if(!wrap)return;
+    const w=Math.min(wrap.clientWidth,960), narrow=w<640;
+    const gap=22,cols=narrow?1:2,rows=4,hh=narrow?126:200;
+    const cw=narrow?w-16:Math.floor((w-24-gap)/2);
+    W=w;H=70+rows*hh+(narrow?3:1)*gap+66;
+    dpr=Math.min(2,devicePixelRatio||1);
+    cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    rects=[];const x0=(W-(cols*cw+(cols-1)*gap))/2;
+    for(let i=0;i<4;i++){const c=i%cols,r=Math.floor(i/cols);
+      rects.push({x:x0+c*(cw+gap),y:70+r*(hh+gap),w:cw,h:hh});}
+  }
+
+  function chip(x,y,label,align='l',dot=null){
+    ctx.font='700 10px '+monoF();const tw=ctx.measureText(label).width;
+    const w=tw+(dot?26:22),h=24;if(align==='r')x-=w;if(align==='c')x-=w/2;
+    ctx.fillStyle=THEMES().deep;rr(x,y,w,h,12);ctx.fill();
+    let tx=x+11;if(dot){ctx.fillStyle=dot;ctx.beginPath();ctx.arc(x+12,y+12,3.5+Math.sin(performance.now()/300)*1,0,7);ctx.fill();tx=x+21;}
+    ctx.fillStyle='#fff';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(label,tx,y+13);
+    return w;
+  }
+  const monoF=()=>'Minecraftia, Silkscreen, monospace';
+  const dispF=()=>'NimbusSanL, Archivo, sans-serif';
+
+  function drawCard(i,s,t,now){
+    const C=THEMES(),{x,y,w,h}=rects[i];
+    const isHover=hover===i;
+    const lift=isHover?-6:Math.sin(t/900+i*1.9)*2.5;
+    const mine=S.user&&s.occupant===S.user.name;
+    // flat hard shadow
+    ctx.fillStyle=C.deep;rr(x,y+lift+7,w,h,20);ctx.fill();
+    // base
+    ctx.fillStyle=isHover?C.card:C.card;rr(x,y+lift,w,h,20);ctx.fill();
+    // header band
+    ctx.save();rr(x,y+lift,w,h,20);ctx.clip();
+    ctx.fillStyle=C.deep;ctx.fillRect(x,y+lift,w,44);
+    ctx.fillStyle='#fff';ctx.textBaseline='middle';ctx.textAlign='left';
+    fit('SLOT 0'+(i+1),w*.5,15,monoF());ctx.fillText('SLOT 0'+(i+1),x+18,y+lift+23);
+    ctx.textAlign='right';ctx.font='700 9px '+monoF();ctx.fillStyle=s.secured?'#7BE0A3':(s.occupant?'#FFB68F':'#9BE5AA');
+    ctx.fillText(s.secured?'SECURED':(s.occupant?'TAKEN':'OPEN'),x+w-16,y+lift+23);
+    // flat white sticker shine
+    ctx.globalAlpha=.75;ctx.fillStyle='#fff';
+    ctx.save();ctx.translate(x+26,y+lift+58);ctx.rotate(-.5);rr(0,0,30,7,4);ctx.fill();ctx.restore();
+    ctx.beginPath();ctx.arc(x+66,y+lift+64,3,0,7);ctx.fill();ctx.globalAlpha=1;
+    // secured sweep every ~6s
+    if(s.secured){const ph=(t%6000)/6000;if(ph<.28){const sx=x-60+(w+120)*(ph/.28);
+      ctx.save();rr(x,y+lift,w,h,20);ctx.clip();ctx.globalAlpha=.32;ctx.fillStyle='#fff';
+      ctx.beginPath();ctx.moveTo(sx,y+lift);ctx.lineTo(sx+34,y+lift);ctx.lineTo(sx+4,y+lift+h);ctx.lineTo(sx-30,y+lift+h);ctx.fill();ctx.restore();}}
+    // body text
+    ctx.textAlign='left';const bx=x+18,bw=w-118;
+    if(s.occupant){
+      const px=fit(s.occupant,bw,26,dispF());ctx.font='700 '+px+'px '+dispF();ctx.fillStyle=C.ink;ctx.fillText(s.occupant,bx,y+lift+86);
+      ctx.font='700 10px '+monoF();ctx.fillStyle=C.sub;ctx.fillText(s.claimed_at?('CLAIMED '+new Date(s.claimed_at).toLocaleDateString([],{month:'short',day:'numeric'})+' '+new Date(s.claimed_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})):'',bx,y+lift+110);
+      // plan chip
+      const pl=s.plan==='week'?'1 WEEK · P40':'1 DAY · P10';
+      ctx.font='700 11px '+monoF();const pw=ctx.measureText(pl).width+20;
+      ctx.fillStyle=RUST;rr(bx,y+lift+124,pw,26,13);ctx.fill();
+      ctx.fillStyle='#fff';ctx.fillText(pl,bx+10,y+lift+138);
+      if(s.bid>0){ctx.font='700 11px '+monoF();ctx.fillStyle=RUST;
+        ctx.fillText('TOP BID P'+s.bid+' — '+(s.bidder||'').toUpperCase().slice(0,14),bx,y+lift+170);}
+      else{ctx.font='700 10px '+monoF();ctx.fillStyle=C.sub;ctx.fillText('BIDDING OPEN — TAP TO BID',bx,y+lift+170);}
+    }else{
+      ctx.font='700 30px '+dispF();ctx.fillStyle=C.ink;ctx.fillText('OPEN',bx,y+lift+86);
+      const pulse=.6+.4*Math.sin(t/280);
+      ctx.globalAlpha=pulse;ctx.fillStyle=EM;rr(bx,y+lift+116,132,28,14);ctx.fill();
+      ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.font='700 10px '+monoF();ctx.fillText('TAP TO CLAIM',bx+14,y+lift+131);
+      ctx.font='700 10px '+monoF();ctx.fillStyle=C.sub;ctx.fillText('FIRST COME, FIRST SERVED',bx,y+lift+170);
+    }
+    if(s.secured){ // secured strip
+      ctx.fillStyle=C.deep;ctx.fillRect(x,y+lift+h-34,w,34);
+      ctx.fillStyle='#fff';ctx.textAlign='left';ctx.font='700 10px '+monoF();
+      ctx.fillText('LOCKED UNTIL REFRESH · +P5',bx,y+lift+h-16);
+    }
+    // perforation + stub
+    ctx.strokeStyle=C.line;ctx.setLineDash([4,5]);ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(x+w-88,y+lift+10);ctx.lineTo(x+w-88,y+lift+h-10);ctx.stroke();ctx.setLineDash([]);
+    // LED
+    const led=x+w-44,ly=y+lift+74,col=s.secured?'#fff':(s.occupant?RUST:EM);
+    ctx.globalAlpha=.25;ctx.fillStyle=col;ctx.beginPath();ctx.arc(led,ly,12+Math.sin(t/350+i)*3,0,7);ctx.fill();
+    ctx.globalAlpha=1;ctx.fillStyle=col;ctx.beginPath();ctx.arc(led,ly,7,0,7);ctx.fill();
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.arc(led,ly,11,0,7);ctx.stroke();
+    // price on stub
+    ctx.textAlign='center';ctx.font='700 14px '+monoF();ctx.fillStyle=C.ink;
+    ctx.fillText(s.plan==='week'?'P40':(s.plan==='day'?'P10':'P'+(myPrice(s.plan==='week'?40:10)||'--')),led,y+lift+112);
+    ctx.font='700 9px '+monoF();ctx.fillStyle=C.sub;
+    const nb=BOARD.bids.filter(b=>b.slot===s.slot).length;ctx.fillText('BIDS '+nb,led,y+lift+132);
+    if(s.secured){ctx.fillStyle='#fff';rr(led-16,y+lift+146,32,18,9);ctx.fill();
+      ctx.fillStyle=C.deep;ctx.font='700 8px '+monoF();ctx.fillText('LOCK',led,y+lift+156);}
+    ctx.restore();
+    if(isHover){ctx.strokeStyle='#fff';ctx.lineWidth=3;rr(x,y+lift,w,h,20);ctx.stroke();}
+    if(mine){ctx.strokeStyle=EM;ctx.lineWidth=3;rr(x-3,y+lift-3,w+6,h+6,23);ctx.stroke();}
+  }
+
+  function draw(t){
+    ctx.clearRect(0,0,W,H);const C=THEMES();
+    // drifting simple shapes behind the cards
+    for(let i=0;i<6;i++){const px=(i*173%W)+Math.sin(t/4000+i)*30,py=(i*97%H)+Math.cos(t/5200+i*2)*24;
+      ctx.globalAlpha=.10;ctx.strokeStyle=i%2?RUST:EM;ctx.lineWidth=3;
+      if(i%3===0){ctx.beginPath();ctx.arc(px,py,12,0,7);ctx.stroke();}
+      else if(i%3===1){ctx.beginPath();ctx.moveTo(px-8,py);ctx.lineTo(px+8,py);ctx.moveTo(px,py-8);ctx.lineTo(px,py+8);ctx.stroke();}
+      else{ctx.fillStyle=i%2?EM:RUST;ctx.beginPath();ctx.arc(px,py,4,0,7);ctx.fill();}
+      ctx.globalAlpha=1;}
+    const now=Date.now();
+    BOARD.slots.forEach((s,i)=>drawCard(i,s,t,now));
+    const open=BOARD.slots.filter(s=>!s.occupant).length,sec=BOARD.slots.filter(s=>s.secured).length;
+    chip(12,12,'JSPOTS · 11-BLOCK 2','l',EM);
+    chip(14,48,'4 CONCURRENT SLOTS','l',RUST);
+    chip(W-12,12,'REFRESH FRI 4PM · '+fmtCd(nextFridayRefresh()-now),'r');
+    chip(W-12,48,cloudOK?'CLOUD SYNC':'LOCAL MODE','r',cloudOK?EM:RUST);
+    chip(12,H-36,`OPEN ${open} · SECURED ${sec} · BIDS ${BOARD.bids.length}`,'l');
+    chip(W-12,H-36,'LIVE','r','#ff5d5d');
+  }
+
+  function loop(t){if(!boardActive)return;draw(t);requestAnimationFrame(loop);}
+  const hit=e=>{const r=cv.getBoundingClientRect(),mx=(e.clientX??0)-r.left,my=(e.clientY??0)-r.top;
+    return rects.findIndex(a=>mx>=a.x&&mx<=a.x+a.w&&my>=a.y&&my<=a.y+a.h);};
+  cv.onmousemove=e=>{const i=hit(e);if(i!==hover){hover=i;cv.style.cursor=i>=0?'pointer':'default';}};
+  cv.onmouseleave=()=>hover=-1;
+  cv.onclick=e=>{const i=hit(e);if(i>=0)slotAction(i);};
+  addEventListener('resize',size);
+  size();boardActive=true;requestAnimationFrame(loop);
+  const paint=()=>{};onData(paint);
+  cleanupFn=()=>{boardActive=false;dataHooks.delete(paint);removeEventListener('resize',size);};
+}
+
+function slotAction(i){
+  const s=BOARD.slots[i],u=S.user;
+  if(!u){toast('Do the intro first — go Home','alert');return;}
+  if(s.occupant===u.name){
+    if(!s.secured)return confirmModal(`Secure slot ${i+1}?`,'Pay <b>'+peso(5)+'</b> more and nobody can take this slot until the Friday refresh.', 'secure it +'+peso(5),async()=>{
+      s.secured=true;saveBoard();notify();beep(920,.07,'triangle',.06);
+      try{await sbPatch('slots',`slot=eq.${s.slot}`,{secured:true});shout()}catch(e){pendingOps.push({type:'secure',slot:s.slot});savePending();}
+      toast('Slot '+(i+1)+' is locked. Safe ka na.','lock');
+    });
+    return confirmModal('Release your slot?','Your slot goes back to OPEN and anyone can claim it.','release it',async()=>{
+      Object.assign(s,{occupant:null,plan:null,secured:false,bid:0,bidder:null,claimed_at:null});saveBoard();notify();
+      try{await sbPatch('slots',`slot=eq.${s.slot}`,{occupant:null,plan:null,secured:false,bid:0,bidder:null,claimed_at:null});shout()}catch(e){}
+      toast('Slot released.','refresh');
+    },true);
+  }
+  if(s.secured)return toast('This slot is SECURED — nobody can take it until refresh.','lock');
+  if(s.occupant)return openBid(i);
+  if(BOARD.slots.some(x=>x.occupant===u.name))return toast('One slot per person — you already hold one.','alert');
+  if(u.banned)return toast('You are banned. Wait for the monthly reset.','alert');
+  openClaim(i);
+}
+function openClaim(i){
+  const d=myPrice(10),w=myPrice(40),pen=myPenalty();
+  modal(`<h3>Claim slot ${i+1}</h3><div class="msub">Pick your subscription. ${pen?`Your price includes <b>+${pen}%</b> from strikes. ${S.user.banned?'<b>You are banned — wait for the monthly reset.</b>':''}`:'Connect at Free Times — recess, vacant, and when we\u2019re doing nothing.'}</div>
+  ${S.user.banned?'':`<div class="planpick">
+    <button id="pDay"><b>${peso(d)}</b><span>1 DAY PLAN</span></button>
+    <button id="pWeek"><b>${peso(w)}</b><span>1 WEEK PLAN</span></button></div>`}
+  <div class="btnrow"><button class="btn ghost" id="mNo">cancel</button></div>`);
+  $('#mNo').onclick=closeModal;
+  const claim=async plan=>{
+    const s=BOARD.slots[i];const at=new Date().toISOString();
+    Object.assign(s,{occupant:S.user.name,plan,secured:false,bid:0,bidder:null,claimed_at:at});
+    saveBoard();notify();closeModal();beep(660,.06,'triangle',.06);setTimeout(()=>beep(920,.08,'triangle',.06),90);
+    const op={type:'claim',slot:s.slot,name:S.user.name,plan,at};
+    try{await applyOp(op);shout();toast(`Slot ${i+1} is yours — see you at free time!`,'ticket');}
+    catch(e){pendingOps.push(op);savePending();toast('Claimed locally — will sync when online','cloud');}
+  };
+  if($('#pDay'))$('#pDay').onclick=()=>claim('day');
+  if($('#pWeek'))$('#pWeek').onclick=()=>claim('week');
+}
+function openBid(i){
+  const s=BOARD.slots[i],base=s.plan==='week'?40:10;
+  const min=Math.max(base,s.bid||0)+5;
+  modal(`<h3>Outbid slot ${i+1}</h3><div class="msub">Currently held by <b>${esc(s.occupant)}</b>.
+    ${s.bid?`Top bid: <b>${peso(s.bid)}</b> by ${esc(s.bidder||'—')}.`:'No bids yet.'} Minimum bid: <b>${peso(min)}</b>.
+    Note: they can still secure it for +${peso(5)} to lock it till refresh.</div>
+    <div class="field"><label>YOUR BID (PESOS)</label><input id="bidIn" type="number" min="${min}" value="${min}"></div>
+    <div class="btnrow"><button class="btn rust" id="bidGo">${ic('gavel')} place bid</button><button class="btn ghost" id="mNo">cancel</button></div>`);
+  $('#mNo').onclick=closeModal;
+  $('#bidGo').onclick=async()=>{
+    const v=parseInt($('#bidIn').value);if(!v||v<min)return toast('Bid must be at least '+peso(min),'alert');
+    const op={type:'bid',slot:s.slot,name:S.user.name,amount:v};
+    s.bid=v;s.bidder=S.user.name;BOARD.bids.push({slot:s.slot,bidder:S.user.name,amount:v,at:new Date().toISOString()});
+    saveBoard();notify();closeModal();beep(520,.07,'square',.06);
+    try{await applyOp(op);shout();toast('Bid placed — '+peso(v)+' on slot '+(i+1),'gavel');}
+    catch(e){pendingOps.push(op);savePending();toast('Bid saved locally — will sync when online','cloud');}
+  };
+}
+
+/* =====================================================================
+   PAGE: SPINWHEELIE — free loadspot wheel
+   ===================================================================== */
+function pageWheel(){
+  const parts=(BOARD.students.length?BOARD.students.map(s=>s.name).filter(n=>!(BOARD.students.find(s=>s.name===n)||{}).banned):ROSTER.map(([,n])=>n));
+  const winnersKey='jspots_wheel';
+  let winners=[];try{winners=JSON.parse(localStorage.getItem(winnersKey)||'[]')}catch(e){}
+  app.innerHTML=`<div class="wrap"><div style="text-align:center"><div class="kicker">FREE LOADSPOT · JE CONNECTS YOU FOR FREE</div>
+    <h2 class="h">spinwheelie</h2>
+    <p class="lead" style="margin:0 auto 30px">One free slot, given away by pure luck. Je still connects people for free — but with boundaries: this wheel, dire group-research situations, emergencies, and fetcher cases.</p></div>
+    <div class="wheelwrap">
+      <canvas id="wheelCv" width="440" height="440"></canvas>
+      <div class="wheel-side">
+        <button class="btn rust" id="spinBtn" style="justify-content:center;font-size:18px">${ic('wheel')} SPIN IT</button>
+        <div class="chip">${ic('user')} ${parts.length} classmates in the pool</div>
+        <div><div class="sech" style="margin-top:4px">RECENT WINNERS</div><div class="winlist" id="winList"></div></div>
+      </div>
+    </div></div>`;
+  const cv=$('#wheelCv'),ctx=cv.getContext('2d'),dpr=Math.min(2,devicePixelRatio||1);
+  cv.width=440*dpr;cv.height=440*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  const names=parts.length?parts:['nobody yet'];
+  const segs=names.length,arc=Math.PI*2/segs,radius=196,cx=220,cy=220;
+  let ang=0,spinning=false;
+  function drawWheel(){
+    ctx.clearRect(0,0,440,440);
+    // flat shadow
+    ctx.fillStyle='#175233';ctx.beginPath();ctx.arc(cx,cy+9,radius,0,7);ctx.fill();
+    for(let i=0;i<segs;i++){
+      const a0=ang+i*arc,a1=a0+arc;
+      ctx.fillStyle=i%2?'#175233':EM;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,radius,a0,a1);ctx.fill();
+      ctx.save();ctx.translate(cx,cy);ctx.rotate(a0+arc/2);
+      ctx.textAlign='right';ctx.fillStyle=i%2?'#9BE5AA':'#0E3A22';
+      let nm=names[i];if(nm.length>13)nm=nm.slice(0,12)+'…';
+      ctx.font='700 13px '+monoF();ctx.fillText(nm,radius-16,5);ctx.restore();
+    }
+    ctx.fillStyle=names.length%2?'#175233':EM;ctx.beginPath();ctx.arc(cx,cy,radius,0,7);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx,cy,34,0,7);ctx.fill();
+    ctx.fillStyle='#C4572E';ctx.beginPath();ctx.arc(cx,cy,20,0,7);ctx.fill();
+    // rust pointer
+    ctx.fillStyle='#C4572E';ctx.beginPath();ctx.moveTo(cx-16,4);ctx.lineTo(cx+16,4);ctx.lineTo(cx,38);ctx.fill();
+  }
+  drawWheel();
+  function drawWins(){$('#winList').innerHTML=winners.length?winners.map(w=>`<div class="winrow"><b>${esc(w.name)}</b><span class="mono">${new Date(w.at).toLocaleDateString([],{month:'short',day:'numeric'})}</span></div>`).join(''):'<div class="help">No spins yet — be the first lucky one.</div>';}
+  drawWins();
+  let lastIdx=-1;
+  $('#spinBtn').onclick=()=>{
+    if(spinning)return;spinning=true;beep(440,.05);
+    const target=Math.floor(Math.random()*segs);
+    const start=ang,total=Math.PI*2*(4+Math.random())+((segs-target-0.5)*arc-ang%(Math.PI*2));
+    const t0=performance.now(),dur=4200;
+    (function step(t){const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+      ang=start+total*e;drawWheel();
+      const idx=Math.floor(((Math.PI*2.75-ang)%(Math.PI*2)+Math.PI*2)%(Math.PI*2)/arc)%segs;
+      if(idx!==lastIdx){lastIdx=idx;beep(600+idx*22,.03,'square',.045);}
+      if(p<1)requestAnimationFrame(step);
+      else{spinning=false;const wname=names[target];
+        modal(`<h3>Free Loadspot!</h3><div class="msub">The wheel picked <b style="color:var(--rust)">${esc(wname)}</b> — Je connects you for free. Walang bayad, pero walang heavy downloads ha.</div>
+        <div class="btnrow"><button class="btn" id="wOk">${ic('check')} nice</button><button class="btn ghost" id="wMark">mark as given</button></div>`);
+        $('#wOk').onclick=closeModal;
+        $('#wMark').onclick=()=>{closeModal();winners.unshift({name:wname,at:new Date().toISOString()});winners=winners.slice(0,6);
+          localStorage.setItem(winnersKey,JSON.stringify(winners));drawWins();
+          sbIns('wheels',{winner:wname}).then(shout).catch(()=>{});toast('Free loadspot given to '+wname,'ticket');};
+        beep(660,.1,'triangle',.07);setTimeout(()=>beep(880,.12,'triangle',.07),120);setTimeout(()=>beep(1100,.16,'triangle',.07),260);
+      }})(t0);
+  };
+}
+
+/* =====================================================================
+   PAGE: RULES
+   ===================================================================== */
+function pageRules(){
+  const rules=[
+    ['Strictly NO UTANG.','No load, no slot. Je is not a loaning app — pay first, connect after.'],
+    ['No downloading heavy games or apps.','If the download is big, it\u2019s a no. Sizes per plan are in the Q&A.'],
+    ['No downloading game updates & heavy app updates.','Ask first. Game updates are hefty; app updates Je decides case by case.'],
+    ['No watching 2K or 4K videos.','1080p and below, always. Your eyes will survive.'],
+    ['No torrenting, cloud gaming, or streaming marathons.','These eat the whole load in one sitting — the whole block suffers.'],
+    ['No hours-long video calls.','Quick calls are fine. Long calls are data vampires.'],
+    ['Your slot is YOURS.','Don\u2019t lend it, don\u2019t resell it, don\u2019t share hotspot details outside Block 2.'],
+    ['Stay within the hotspot\u2019s range.','Distance and walls kill the signal for everyone. Stay reasonably close to Je\u2019s seat.'],
+    ['No trolling or fake info.','Names, devices and MACs must be real. Trolling the registration = strike.'],
+    ['What happens in Block 2 stays in Block 2.','Don\u2019t spread this site, its rules, or screenshots outside the section.'],
+  ];
+  const strikes=[
+    ['1ST STRIKE','Pay <b>20% more forever</b> — in Jspots\u2019 term, that\u2019s <b>+'+peso(20)+'</b> on the 1 Week Plan ('+peso(40)+' → '+peso(60)+') — <b>or</b> no connection / entry slot for <b>1 school week</b>. Choose your poison.'],
+    ['2ND STRIKE','Pay <b>10% more forever</b> (stackable!) — <b>+'+peso(10)+'</b> on the 1 Week Plan — <b>or</b> no connection for <b>2 school weeks</b>.'],
+    ['3RD STRIKE','Pay <b>50% more</b>. Applies to both plans: 1 Day '+peso(10)+' → '+peso(15)+', 1 Week '+peso(40)+' → '+peso(60)+'.'],
+    ['4TH STRIKE','<b>BAN.</b> Straight up. No connection until strikes reset.'],
+  ];
+  app.innerHTML=`<div class="wrap"><div class="rulesgrid">
+    <div class="side">
+      <div class="kicker">MY LIMITS, YOUR BOUNDARIES</div>
+      <h2 class="h">the rules</h2>
+      <p class="lead">Ten house rules and a four-strike ladder. Break them and the prices climb — simple economics
